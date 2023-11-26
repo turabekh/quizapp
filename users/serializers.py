@@ -16,10 +16,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         queryset=StudentGroup.objects.all(),
         required=False
     )
+    profile_image = serializers.ImageField(read_only=True)
+
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password', 'student_group')
+        fields = ('email', 'first_name', 'last_name', 'password', 'student_group', "profile_image")
 
     def create(self, validated_data):
         student_group = validated_data.pop('student_group', None)

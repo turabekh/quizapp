@@ -65,6 +65,7 @@ class UserLoginView(APIView):
                     "last_name": user.last_name,
                     "user_type": user.user_type,
                     "student_group": user.student_group_id,
+                    "profile_image": user.profile_image.url if user.profile_image else None,
                 },
                 "access": token_data['access'],
                 "refresh": token_data['refresh']
