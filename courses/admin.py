@@ -3,6 +3,7 @@ from .models import (
     Course, Topic, Question, 
     AnswerChoice, Quiz, AnswerChoice, 
     QuizAttempt, AnswerSubmission,
+    AssessmentCriteria,
 )
 
 from .forms import QuizForm, QuestionForm       
@@ -20,8 +21,12 @@ class TopicInline(admin.TabularInline):
     model = Topic
     extra = 1  # One topic by default
 
+class AssessmentCriteriaInline(admin.TabularInline):
+    model = AssessmentCriteria
+    extra = 3
+
 class CourseAdmin(admin.ModelAdmin):
-    inlines = [TopicInline]
+    inlines = [AssessmentCriteriaInline, TopicInline]
 
 class TopicAdmin(admin.ModelAdmin):
     pass

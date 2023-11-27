@@ -1,10 +1,12 @@
 from django.db import models
 from django.conf import settings
 
+
 class Course(models.Model):
     name = models.CharField(max_length=200)
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="taught_courses", null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    learning_outcomes = models.TextField(null=True, blank=True)
     academic_year = models.CharField(max_length=9, choices=(
         ('2023-2024', '2023-2024'),
         ('2024-2025', '2024-2025'),
@@ -26,6 +28,18 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.name} - {self.teacher.first_name} {self.teacher.last_name}   {self.academic_year} {self.semester}"
 
+class AssessmentCriteria(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='assessment_criteria')
+    criteria = models.TextField(null=True, blank=True)
+    criteria_type = models.CharField(max_length=20, 
+                                     choices=(("pass", "Pass"), ("merit", "Merit"), ("distinction", "Distinction")),
+                                     default="pass"
+                                     )
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.criteria
+    
 class Enrollment(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')

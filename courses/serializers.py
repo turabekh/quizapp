@@ -6,6 +6,7 @@ from .models import (
     AnswerChoice, Topic,
     AnswerSubmission,
     QuizAttempt,
+    AssessmentCriteria,
 )
 
 
@@ -20,14 +21,24 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = ['course', 'date_enrolled']
 
+class AssessmentCriteriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssessmentCriteria
+        fields = ['id', 'criteria', 'criteria_type']
 
 class CourseWithEnrollmentSerializer(serializers.ModelSerializer):
     is_enrolled = serializers.BooleanField()
     teacher = TeacherSerializer(read_only=True)  # Nested serializer for the teacher
+    assessment_criteria = AssessmentCriteriaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'academic_year', 'is_enrolled', 'teacher', 'semester', 'active']
+        fields = [
+            'id', 'name', 'description', 
+            'academic_year', 'is_enrolled', 
+            'teacher', 'semester', 'active',
+            'learning_outcomes', 'assessment_criteria'
+            ]
 
 
 class AnswerChoiceSerializer(serializers.ModelSerializer):
@@ -59,9 +70,15 @@ class TopicSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer(read_only=True)
     topics = TopicSerializer(many=True, read_only=True)
+    assessment_criteria = AssessmentCriteriaSerializer(many=True, read_only=True)
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'academic_year', 'semester', 'active', 'teacher', 'topics']
+        fields = [
+            'id', 'name', 'description', 
+            'academic_year', 'semester', 
+            'active', 'teacher', 'topics',
+            'learning_outcomes', 'assessment_criteria',
+            ]
 
 
 class AnswerChoiceSerializer2(serializers.ModelSerializer):
